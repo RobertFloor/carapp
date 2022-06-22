@@ -37,4 +37,8 @@ public class CarService {
     public void deleteById(Long aLong) {
         carRepository.deleteById(aLong);
     }
+
+    public List<Car> findByMileage(int mileage) {
+        return this.carRepository.findByMileage(mileage);
+    }
 }

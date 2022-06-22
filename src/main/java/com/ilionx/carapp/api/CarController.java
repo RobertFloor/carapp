@@ -38,6 +38,11 @@ public class CarController {
         }
     }
 
+    @GetMapping("/mileage/{mileage}")
+    public List<Car> findCarByMileage(@PathVariable int mileage) {
+        return this.carService.findByMileage(mileage);
+    }
+
     @PutMapping("{id}")
     public ResponseEntity<Car> updateCarById(@PathVariable Long id, @RequestBody Car origin) {
         Optional<Car> optionalCar = this.carService.findById(id) ;
