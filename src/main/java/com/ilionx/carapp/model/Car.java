@@ -11,6 +11,11 @@ public class Car {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    private String brand;
+
+    private String licensePlate;
+
+    private int mileage;
 
     public long getId() {
         return id;
@@ -40,11 +45,7 @@ public class Car {
         this.mileage = mileage;
     }
 
-
-
-    private String brand;
-
-    private String licensePlate;
-
-    private int mileage;
+    public void setId(long id) {
+        this.id = id;
+    }
 }

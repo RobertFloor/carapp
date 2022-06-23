@@ -5,27 +5,23 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 public class CarTest {
 
     // class under test
-    private Car car;
-
-
-    @BeforeEach
-    public void init() {
-        this.car = new Car();
-    }
+    private Car car = new Car();
 
     @Test
     public void testSetGetBrand() {
 
         car.setBrand("Ferrari");
-        Assertions.assertEquals("Ferrari", car.getBrand());
+        assertEquals("Ferrari", car.getBrand());
     }
 
     @Test
     public void testSetGetMileage() {
         car.setMileage(11000);
-        Assertions.assertEquals(11000, car.getMileage());
+        assertEquals(11000, car.getMileage());
     }
 }

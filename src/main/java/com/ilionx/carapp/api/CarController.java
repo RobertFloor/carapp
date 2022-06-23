@@ -18,43 +18,46 @@ public class CarController {
     private CarService carService;
 
     @GetMapping
-    public List<Car> findAllCars() {
-        return this.carService.findAll();
+    public ResponseEntity<List<Car>> findAllCars() {
+        return ResponseEntity.ok(this.carService.findAll());
     }
 
     @PostMapping
-    public Car create(@RequestBody Car car) {
-       return this.carService.save(car);
+    public ResponseEntity<Car> create(@RequestBody Car car) {
+       return ResponseEntity.ok(this.carService.save(car));
     }
 
     @GetMapping("{id}")
     public ResponseEntity<Car> findCarById(@PathVariable Long id) {
         Optional<Car> optionalCar = this.carService.findById(id) ;
         if (optionalCar.isPresent()) {
-            return new ResponseEntity<>(optionalCar.get(), HttpStatus.OK);
+            return ResponseEntity.ok(optionalCar.get());
         }
         else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return ResponseEntity.notFound().build();
         }
     }
 
     @GetMapping("/mileage/{mileage}")
-    public List<Car> findCarByMileage(@PathVariable int mileage) {
-        return this.carService.findByMileage(mileage);
+    public ResponseEntity<List<Car>> findCarByMileage(@PathVariable int mileage) {
+        return ResponseEntity.ok(this.carService.findByMileage(mileage));
     }
 
     @PutMapping("{id}")
     public ResponseEntity<Car> updateCarById(@PathVariable Long id, @RequestBody Car origin) {
-        Optional<Car> optionalCar = this.carService.findById(id) ;
+        Optional<Car> optionalCar = this.carService.update(origin, id) ;
         if (optionalCar.isPresent()) {
-            Car target = optionalCar.get();
-            target.setBrand(origin.getBrand());
-            target.setLicensePlate(origin.getLicensePlate());
-            target.setMileage(origin.getMileage());
-            return new ResponseEntity<>(this.carService.save(target), HttpStatus.OK);
+//            return new ResponseEntity<>(this.carService.save(target), HttpStatus.OK);
+            return ResponseEntity.ok(optionalCar.get());
         }
         else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return ResponseEntity.notFound().build();
         }
+    }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<Void> deleteById (@PathVariable Long id) {
+        this.carService.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 }
