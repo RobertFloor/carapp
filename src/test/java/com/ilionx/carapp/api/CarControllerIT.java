@@ -2,6 +2,7 @@ package com.ilionx.carapp.api;
 
 import com.ilionx.carapp.model.Car;
 import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 
 @SpringBootTest(webEnvironment= SpringBootTest.WebEnvironment.RANDOM_PORT)
-@TestMethodOrder(MethodOrderer.MethodName.class )
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class )
 @ActiveProfiles("intergrationtests")
 public class CarControllerIT {
 
@@ -27,7 +28,8 @@ public class CarControllerIT {
 
     private final String url = "/api/cars";
     @Test
-    public void test1CreateUsingPost() {
+    @Order(1)
+    public void testCreateUsingPost() {
         Car car = new Car();
         car.setLicensePlate("AAGGKK");
         car.setMileage(10000);
@@ -45,6 +47,7 @@ public class CarControllerIT {
     }
 
     @Test
+    @Order(2)
     public void test2Fetchit() {
         ResponseEntity<Car> response = this.testRestTemplate.getForEntity(url+"/"+ currentId, Car.class);
         assertNotNull(response.getBody());

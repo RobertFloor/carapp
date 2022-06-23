@@ -20,9 +20,9 @@ public class CountriesController {
     final String api = "https://countriesnow.space/api/v0.1/countries/cities/q?country=";
 
     @GetMapping("/{country}/cities")
-    public ResponseEntity<List> getCountries(@PathVariable String country) {
+    public ResponseEntity<String> getCountries(@PathVariable String country) {
         try {
-            ResponseEntity<List> result = this.restTemplate.getForEntity(new URI(this.api + country), List.class);
+            ResponseEntity<String> result = this.restTemplate.getForEntity(new URI(this.api + country), String.class);
             return result;
 
         } catch (URISyntaxException e) {

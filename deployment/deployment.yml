@@ -1,0 +1,105 @@
+# TEST
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: configmap1
+  namespace: example-ns 
+data:
+  KEY_1: example1
+  KEY_2: example2
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: notset
+  name: notset
+  namespace: examples-ns
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: notset
+  strategy:
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: notset
+    spec:
+      automountServiceAccountToken: false
+      containers:
+      - name: notset
+        image: registry.access.redhat.com/ubi8/nginx-118:1
+        command: ["/bin/sh"]
+        args: ["-c", "/usr/libexec/s2i/run"]
+        envFrom:
+        - configMapRef:
+            name: sbi-cm
+        securityContext:
+          privileged: false
+        ports:
+        - containerPort: 8080
+        readinessProbe:
+          tcpSocket:
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        livenessProbe:
+          tcpSocket:
+            port: 8080
+          initialDelaySeconds: 15
+          periodSeconds: 20
+        resources:
+          limits:
+            cpu: 500m
+            memory: 128Mi
+          requests:
+            cpu: 250m
+            memory: 64Mi
+status: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: notset
+  namespace: example-ns 
+  labels:
+    app: notset
+    app.kubernetes.io/component: notset
+    app.kubernetes.io/instance: notset
+spec:
+  ports:
+    - name: http-port
+      protocol: TCP
+      port: 8080
+      targetPort: 8080
+  selector:
+    app: notset
+  type: ClusterIP
+  sessionAffinity: None
+status:
+  loadBalancer: {}
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  creationTimestamp: null
+  labels:
+    app: notset
+    app.kubernetes.io/component: notset
+    app.kubernetes.io/instance: notset
+  name: notset
+  namespace: example-ns 
+spec:
+  port:
+    targetPort: 8080
+  tls:
+    termination: edge
+  to:
+    kind: "Service"
+    name: notset
+    weight: 100
+status: {}
